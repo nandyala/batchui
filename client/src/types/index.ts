@@ -9,6 +9,10 @@ export interface ClientConfig {
   password: string
   encrypt: boolean
   trustServerCertificate: boolean
+  /** "ntlm" | "nativeAuthentication" | null → SQL auth */
+  authenticationScheme?: string | null
+  /** Windows domain – required when authenticationScheme is "ntlm" */
+  domain?: string | null
 }
 
 export type JobStatus = 'COMPLETED' | 'FAILED' | 'STARTED' | 'STOPPED' | 'ABANDONED'

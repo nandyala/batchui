@@ -77,16 +77,56 @@ public class DynamicDataSourceManager {
 
     // -----------------------------------------------------------------------
 
-    private Optional<JdbcTemplate> tryConnect(ClientConfig config) {
-        String url = String.format(
+    /**
+     * Builds the JDBC URL for the given client.
+     *
+     * <p>SQL Authentication (default):
+     * <pre>jdbc:sqlserver://host:1433;databaseName=DB;encrypt=true;trustServerCertificate=false</pre>
+     *
+     * <p>NTLM / Windows Authentication:
+     * <pre>jdbc:sqlserver://host:1433;databaseName=DB;encrypt=true;trustServerCertificate=false;
+     *      authenticationScheme=ntlm;domain=CORP;user=svc_batch;password=secret</pre>
+     */
+    private String buildJdbcUrl(ClientConfig config) {
+        StringBuilder url = new StringBuilder(String.format(
             "jdbc:sqlserver://%s:%d;databaseName=%s;encrypt=%s;trustServerCertificate=%s",
             config.server(), config.port(), config.database(),
-            config.encrypt(), config.trustServerCertificate());
+            config.encrypt(), config.trustServerCertificate()));
+
+        if (config.isNtlm()) {
+            // authenticationScheme drives the NTLM handshake inside the MS JDBC driver
+            url.append(";authenticationScheme=").append(config.authenticationScheme());
+
+            if (config.domain() != null && !config.domain().isBlank()) {
+                url.append(";domain=").append(config.domain());
+            }
+            // For NTLM the driver also accepts user/password in the URL
+            if (config.username() != null && !config.username().isBlank()) {
+                url.append(";user=").append(config.username());
+            }
+            if (config.password() != null && !config.password().isBlank()) {
+                url.append(";password=").append(config.password());
+            }
+        }
+        return url.toString();
+    }
+
+    private Optional<JdbcTemplate> tryConnect(ClientConfig config) {
+        String url = buildJdbcUrl(config);
         try {
             HikariConfig hc = new HikariConfig();
             hc.setJdbcUrl(url);
-            hc.setUsername(config.username());
-            hc.setPassword(config.password());
+
+            if (config.isNtlm()) {
+                // Credentials are embedded in the URL for NTLM; HikariCP still
+                // requires non-null values so we pass empty strings.
+                hc.setUsername(config.username() != null ? config.username() : "");
+                hc.setPassword(config.password() != null ? config.password() : "");
+            } else {
+                hc.setUsername(config.username());
+                hc.setPassword(config.password());
+            }
+
             hc.setMaximumPoolSize(3);
             hc.setMinimumIdle(1);
             hc.setConnectionTimeout(5_000);   // 5 s — fail fast on bad config
@@ -98,7 +138,10 @@ public class DynamicDataSourceManager {
 
             dataSources.put(config.id(), ds);
             templates.put(config.id(), tpl);
-            log.info("Connected to SQL Server for client '{}' ({})", config.id(), url);
+            log.info("Connected to SQL Server for client '{}' (auth={}, server={}:{})",
+                     config.id(),
+                     config.authenticationScheme() != null ? config.authenticationScheme() : "sqlAuth",
+                     config.server(), config.port());
             return Optional.of(tpl);
         } catch (Exception ex) {
             log.warn("Cannot connect to SQL Server for client '{}' ({}): {}",

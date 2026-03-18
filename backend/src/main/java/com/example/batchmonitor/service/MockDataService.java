@@ -36,9 +36,9 @@ public class MockDataService {
     );
 
     private static final Map<String, ClientProfile> CLIENT_PROFILES = Map.of(
-        "acme-corp",   new ClientProfile(0.05, "high"),
-        "techco",      new ClientProfile(0.18, "med"),
-        "retail-plus", new ClientProfile(0.10, "high")
+        "acme-corp1",   new ClientProfile(0.05, "high"),
+        "techco1",      new ClientProfile(0.18, "med"),
+        "retail-plus1", new ClientProfile(0.10, "high")
     );
 
     // Stable per-session cache — regenerates on restart

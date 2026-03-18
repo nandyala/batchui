@@ -1,15 +1,31 @@
 [
   {
+    "id": "local",
+    "name": "Local (NTLM)",
+    "color": "#6366f1",
+    "server": "localhost",
+    "port": 1433,
+    "database": "batchdb",
+    "encrypt": true,
+    "trustServerCertificate": false,
+    "authenticationScheme": "ntlm",
+    "domain": "CORP",
+    "username": "svc_batch",
+    "password": "Passw0rd"
+  },
+  {
     "id": "acme-corp",
     "name": "Acme Corp",
     "color": "#6366f1",
     "server": "acme-sql.internal",
     "port": 1433,
     "database": "BATCH_DB",
-    "username": "batch_reader",
-    "password": "secret",
-    "encrypt": false,
-    "trustServerCertificate": true
+    "encrypt": true,
+    "trustServerCertificate": false,
+    "authenticationScheme": "ntlm",
+    "domain": "ACME",
+    "username": "svc_batch",
+    "password": "secret"
   },
   {
     "id": "techco",
@@ -18,10 +34,12 @@
     "server": "techco-sql.internal",
     "port": 1433,
     "database": "BATCH_DB",
-    "username": "batch_reader",
-    "password": "secret",
-    "encrypt": false,
-    "trustServerCertificate": true
+    "encrypt": true,
+    "trustServerCertificate": false,
+    "authenticationScheme": "ntlm",
+    "domain": "TECHCO",
+    "username": "svc_batch",
+    "password": "secret"
   },
   {
     "id": "retail-plus",
@@ -30,9 +48,11 @@
     "server": "retailplus-sql.internal",
     "port": 1433,
     "database": "BATCH_DB",
-    "username": "batch_reader",
-    "password": "secret",
-    "encrypt": false,
-    "trustServerCertificate": true
+    "encrypt": true,
+    "trustServerCertificate": false,
+    "authenticationScheme": "ntlm",
+    "domain": "RETAIL",
+    "username": "svc_batch",
+    "password": "secret"
   }
 ]

@@ -13,5 +13,14 @@ public record ClientConfig(
     String  username,
     String  password,
     boolean encrypt,
-    boolean trustServerCertificate
-) {}
+    boolean trustServerCertificate,
+    // NTLM / Windows Authentication support
+    String  authenticationScheme,   // "ntlm" | "nativeAuthentication" | null → SQL auth
+    String  domain                  // Windows domain – required when authenticationScheme=ntlm
+) {
+    /** True when this client uses NTLM or Windows (Kerberos) authentication. */
+    public boolean isNtlm() {
+        return "ntlm".equalsIgnoreCase(authenticationScheme)
+            || "nativeAuthentication".equalsIgnoreCase(authenticationScheme);
+    }
+}
