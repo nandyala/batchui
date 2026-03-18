@@ -1,0 +1,20 @@
+server:
+  port: 8081
+
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+
+batch-monitor:
+  # Set to true to use generated mock data (no SQL Server needed).
+  # Set to false to connect to real client databases defined in clients.json.
+  use-mock-data: true
+
+  # Path to the JSON file containing client connection configurations.
+  # Can be a classpath resource (classpath:clients.json) or an absolute file path.
+  clients-file: classpath:clients.json
+
+logging:
+  level:
+    com.example.batchmonitor: DEBUG

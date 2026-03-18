@@ -1,0 +1,79 @@
+# ============================================================
+# Batch Monitor – .gitignore
+# ============================================================
+
+# ── Java / Maven (backend) ──────────────────────────────────
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+hs_err_pid*
+replay_pid*
+.mvn/wrapper/maven-wrapper.jar
+.idea
+# ── Spring Boot ─────────────────────────────────────────────
+application-local.yml
+application-local.yaml
+application-secret.yml
+clients-local.json
+
+# ── Node / npm (client) ─────────────────────────────────────
+node_modules/
+client/node_modules/
+client/dist/
+client/build/
+client/.vite/
+client/*.local
+
+# ── Environment & secrets ───────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ── IDEs ────────────────────────────────────────────────────
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Eclipse
+.classpath
+.project
+.settings/
+bin/
+
+# NetBeans
+nbproject/
+nbbuild/
+nbdist/
+.nb-gradle/
+
+# ── OS generated ────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+
+# ── Logs ────────────────────────────────────────────────────
+logs/
+*.log
+*.log.*
+
+# ── Test / coverage output ──────────────────────────────────
+backend/target/surefire-reports/
+backend/target/site/jacoco/
+client/coverage/
+
+# ── Misc ────────────────────────────────────────────────────
+*.swp
+*.swo
+*~
+.history/

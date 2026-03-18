@@ -1,0 +1,38 @@
+[
+  {
+    "id": "acme-corp",
+    "name": "Acme Corp",
+    "color": "#6366f1",
+    "server": "acme-sql.internal",
+    "port": 1433,
+    "database": "BATCH_DB",
+    "username": "batch_reader",
+    "password": "secret",
+    "encrypt": false,
+    "trustServerCertificate": true
+  },
+  {
+    "id": "techco",
+    "name": "TechCo",
+    "color": "#10b981",
+    "server": "techco-sql.internal",
+    "port": 1433,
+    "database": "BATCH_DB",
+    "username": "batch_reader",
+    "password": "secret",
+    "encrypt": false,
+    "trustServerCertificate": true
+  },
+  {
+    "id": "retail-plus",
+    "name": "Retail Plus",
+    "color": "#f59e0b",
+    "server": "retailplus-sql.internal",
+    "port": 1433,
+    "database": "BATCH_DB",
+    "username": "batch_reader",
+    "password": "secret",
+    "encrypt": false,
+    "trustServerCertificate": true
+  }
+]
