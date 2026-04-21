@@ -1,0 +1,225 @@
+{
+  "info": {
+    "name": "Auto Loan Delinquency Risk API",
+    "_postman_id": "auto-loan-risk-api-collection",
+    "description": "Complete Postman collection for testing Azure ML Auto Loan Delinquency Prediction endpoint. Includes 8 test scenarios covering all risk tiers.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://YOUR-ENDPOINT-NAME.YOUR-REGION.inference.ml.azure.com",
+      "description": "Replace with your Azure ML endpoint URL (from Endpoints > Consume tab)"
+    },
+    {
+      "key": "api_key",
+      "value": "YOUR_PRIMARY_KEY_HERE",
+      "description": "Replace with your Primary Key from Azure ML Endpoints > Consume tab"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Health Check - Endpoint Ping",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{api_key}}" }
+        ],
+        "url": {
+          "raw": "{{base_url}}",
+          "host": ["{{base_url}}"]
+        },
+        "description": "Quick ping to verify endpoint is live and your API key is valid."
+      }
+    },
+    {
+      "name": "2. Score - Super Prime Customer (Low Risk)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{api_key}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"input_data\": {\n    \"columns\": [\n      \"fico_score\", \"vantage_score\", \"payment_history_score\",\n      \"credit_history_length_years\", \"num_open_tradelines\",\n      \"num_hard_inquiries_6mo\", \"num_derog_marks\", \"num_collections\",\n      \"bankruptcy_history\", \"prev_auto_loan_delinquency_count\",\n      \"annual_income\", \"monthly_income\", \"employment_length_years\",\n      \"num_income_sources\", \"loan_amount\", \"loan_term_months\",\n      \"interest_rate_pct\", \"monthly_payment\", \"down_payment_pct\",\n      \"current_balance\", \"vehicle_age_at_origination\",\n      \"vehicle_value_at_origination\", \"current_vehicle_value\",\n      \"ltv_ratio_origination\", \"current_ltv_ratio\", \"is_underwater\",\n      \"dti_ratio\", \"total_dti_ratio\", \"payment_to_income_ratio\",\n      \"loan_burden_score\", \"times_30_dpd_last_12mo\",\n      \"times_60_dpd_last_12mo\", \"times_90_dpd_ever\",\n      \"max_days_past_due_ever\", \"consecutive_on_time_payments\",\n      \"payment_ratio_actual_vs_required\", \"dealer_markup_rate\",\n      \"has_gap_insurance\", \"has_payment_protection\",\n      \"insurance_lapse_indicator\", \"state_unemployment_rate\",\n      \"regional_used_car_price_index\", \"origination_rate_environment\",\n      \"origination_year\", \"loan_age_months\"\n    ],\n    \"data\": [\n      [\n        810, 805, 98,\n        18, 12,\n        0, 0, 0,\n        0, 0,\n        145000, 12083.33, 15,\n        2, 42000, 48,\n        3.9, 945.12, 0.20,\n        28000, 0,\n        55000, 47000,\n        0.76, 0.60, 0,\n        0.08, 0.22, 0.08,\n        18.5, 0,\n        0, 0,\n        0, 36,\n        1.05, 0.5,\n        1, 1,\n        0, 3.2,\n        95.0, 3.5,\n        2022, 36\n      ]\n    ]\n  }\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{base_url}}/score",
+          "host": ["{{base_url}}"],
+          "path": ["score"]
+        },
+        "description": "Super Prime borrower. FICO 810, high income ($145k), short 48-month term, 20% down, zero delinquency history. Expected: NOT delinquent (low risk)."
+      }
+    },
+    {
+      "name": "3. Score - Prime Customer (Medium-Low Risk)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{api_key}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"input_data\": {\n    \"columns\": [\n      \"fico_score\", \"vantage_score\", \"payment_history_score\",\n      \"credit_history_length_years\", \"num_open_tradelines\",\n      \"num_hard_inquiries_6mo\", \"num_derog_marks\", \"num_collections\",\n      \"bankruptcy_history\", \"prev_auto_loan_delinquency_count\",\n      \"annual_income\", \"monthly_income\", \"employment_length_years\",\n      \"num_income_sources\", \"loan_amount\", \"loan_term_months\",\n      \"interest_rate_pct\", \"monthly_payment\", \"down_payment_pct\",\n      \"current_balance\", \"vehicle_age_at_origination\",\n      \"vehicle_value_at_origination\", \"current_vehicle_value\",\n      \"ltv_ratio_origination\", \"current_ltv_ratio\", \"is_underwater\",\n      \"dti_ratio\", \"total_dti_ratio\", \"payment_to_income_ratio\",\n      \"loan_burden_score\", \"times_30_dpd_last_12mo\",\n      \"times_60_dpd_last_12mo\", \"times_90_dpd_ever\",\n      \"max_days_past_due_ever\", \"consecutive_on_time_payments\",\n      \"payment_ratio_actual_vs_required\", \"dealer_markup_rate\",\n      \"has_gap_insurance\", \"has_payment_protection\",\n      \"insurance_lapse_indicator\", \"state_unemployment_rate\",\n      \"regional_used_car_price_index\", \"origination_rate_environment\",\n      \"origination_year\", \"loan_age_months\"\n    ],\n    \"data\": [\n      [\n        705, 698, 84,\n        10, 8,\n        1, 0, 0,\n        0, 0,\n        82000, 6833.33, 7,\n        1, 32000, 60,\n        6.5, 623.40, 0.10,\n        21000, 1,\n        38000, 30000,\n        0.84, 0.70, 0,\n        0.09, 0.30, 0.09,\n        28.4, 0,\n        0, 0,\n        0, 24,\n        1.02, 0.8,\n        1, 0,\n        0, 3.8,\n        100.0, 5.5,\n        2023, 18\n      ]\n    ]\n  }\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{base_url}}/score",
+          "host": ["{{base_url}}"],
+          "path": ["score"]
+        },
+        "description": "Prime borrower. FICO 705, $82k income, 60-month term, clean history. Expected: NOT delinquent (medium-low risk)."
+      }
+    },
+    {
+      "name": "4. Score - Near Prime Customer (Medium Risk)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{api_key}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"input_data\": {\n    \"columns\": [\n      \"fico_score\", \"vantage_score\", \"payment_history_score\",\n      \"credit_history_length_years\", \"num_open_tradelines\",\n      \"num_hard_inquiries_6mo\", \"num_derog_marks\", \"num_collections\",\n      \"bankruptcy_history\", \"prev_auto_loan_delinquency_count\",\n      \"annual_income\", \"monthly_income\", \"employment_length_years\",\n      \"num_income_sources\", \"loan_amount\", \"loan_term_months\",\n      \"interest_rate_pct\", \"monthly_payment\", \"down_payment_pct\",\n      \"current_balance\", \"vehicle_age_at_origination\",\n      \"vehicle_value_at_origination\", \"current_vehicle_value\",\n      \"ltv_ratio_origination\", \"current_ltv_ratio\", \"is_underwater\",\n      \"dti_ratio\", \"total_dti_ratio\", \"payment_to_income_ratio\",\n      \"loan_burden_score\", \"times_30_dpd_last_12mo\",\n      \"times_60_dpd_last_12mo\", \"times_90_dpd_ever\",\n      \"max_days_past_due_ever\", \"consecutive_on_time_payments\",\n      \"payment_ratio_actual_vs_required\", \"dealer_markup_rate\",\n      \"has_gap_insurance\", \"has_payment_protection\",\n      \"insurance_lapse_indicator\", \"state_unemployment_rate\",\n      \"regional_used_car_price_index\", \"origination_rate_environment\",\n      \"origination_year\", \"loan_age_months\"\n    ],\n    \"data\": [\n      [\n        638, 630, 68,\n        5, 5,\n        2, 1, 0,\n        0, 1,\n        52000, 4333.33, 3,\n        1, 27000, 72,\n        9.5, 499.20, 0.05,\n        20000, 2,\n        30000, 22000,\n        0.90, 0.91, 0,\n        0.12, 0.40, 0.12,\n        42.1, 1,\n        0, 0,\n        30, 12,\n        0.98, 1.1,\n        0, 0,\n        0, 4.5,\n        105.0, 6.0,\n        2022, 24\n      ]\n    ]\n  }\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{base_url}}/score",
+          "host": ["{{base_url}}"],
+          "path": ["score"]
+        },
+        "description": "Near Prime borrower. FICO 638, 1 prior delinquency, 72-month term, borderline DTI. Expected: borderline / medium risk."
+      }
+    },
+    {
+      "name": "5. Score - Subprime Customer (High Risk)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{api_key}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"input_data\": {\n    \"columns\": [\n      \"fico_score\", \"vantage_score\", \"payment_history_score\",\n      \"credit_history_length_years\", \"num_open_tradelines\",\n      \"num_hard_inquiries_6mo\", \"num_derog_marks\", \"num_collections\",\n      \"bankruptcy_history\", \"prev_auto_loan_delinquency_count\",\n      \"annual_income\", \"monthly_income\", \"employment_length_years\",\n      \"num_income_sources\", \"loan_amount\", \"loan_term_months\",\n      \"interest_rate_pct\", \"monthly_payment\", \"down_payment_pct\",\n      \"current_balance\", \"vehicle_age_at_origination\",\n      \"vehicle_value_at_origination\", \"current_vehicle_value\",\n      \"ltv_ratio_origination\", \"current_ltv_ratio\", \"is_underwater\",\n      \"dti_ratio\", \"total_dti_ratio\", \"payment_to_income_ratio\",\n      \"loan_burden_score\", \"times_30_dpd_last_12mo\",\n      \"times_60_dpd_last_12mo\", \"times_90_dpd_ever\",\n      \"max_days_past_due_ever\", \"consecutive_on_time_payments\",\n      \"payment_ratio_actual_vs_required\", \"dealer_markup_rate\",\n      \"has_gap_insurance\", \"has_payment_protection\",\n      \"insurance_lapse_indicator\", \"state_unemployment_rate\",\n      \"regional_used_car_price_index\", \"origination_rate_environment\",\n      \"origination_year\", \"loan_age_months\"\n    ],\n    \"data\": [\n      [\n        585, 578, 48,\n        3, 4,\n        3, 2, 1,\n        0, 2,\n        34000, 2833.33, 1,\n        1, 26000, 72,\n        14.5, 618.50, 0.03,\n        21000, 4,\n        28000, 18500,\n        0.93, 1.14, 1,\n        0.22, 0.55, 0.22,\n        58.3, 2,\n        1, 0,\n        30, 8,\n        0.94, 1.8,\n        0, 0,\n        1, 5.5,\n        115.0, 7.2,\n        2023, 18\n      ]\n    ]\n  }\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{base_url}}/score",
+          "host": ["{{base_url}}"],
+          "path": ["score"]
+        },
+        "description": "Subprime borrower. FICO 585, underwater loan, insurance lapse, 2 prior delinquencies, high DTI, part-time employment. Expected: DELINQUENT (high risk)."
+      }
+    },
+    {
+      "name": "6. Score - Deep Subprime Customer (Very High Risk)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{api_key}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"input_data\": {\n    \"columns\": [\n      \"fico_score\", \"vantage_score\", \"payment_history_score\",\n      \"credit_history_length_years\", \"num_open_tradelines\",\n      \"num_hard_inquiries_6mo\", \"num_derog_marks\", \"num_collections\",\n      \"bankruptcy_history\", \"prev_auto_loan_delinquency_count\",\n      \"annual_income\", \"monthly_income\", \"employment_length_years\",\n      \"num_income_sources\", \"loan_amount\", \"loan_term_months\",\n      \"interest_rate_pct\", \"monthly_payment\", \"down_payment_pct\",\n      \"current_balance\", \"vehicle_age_at_origination\",\n      \"vehicle_value_at_origination\", \"current_vehicle_value\",\n      \"ltv_ratio_origination\", \"current_ltv_ratio\", \"is_underwater\",\n      \"dti_ratio\", \"total_dti_ratio\", \"payment_to_income_ratio\",\n      \"loan_burden_score\", \"times_30_dpd_last_12mo\",\n      \"times_60_dpd_last_12mo\", \"times_90_dpd_ever\",\n      \"max_days_past_due_ever\", \"consecutive_on_time_payments\",\n      \"payment_ratio_actual_vs_required\", \"dealer_markup_rate\",\n      \"has_gap_insurance\", \"has_payment_protection\",\n      \"insurance_lapse_indicator\", \"state_unemployment_rate\",\n      \"regional_used_car_price_index\", \"origination_rate_environment\",\n      \"origination_year\", \"loan_age_months\"\n    ],\n    \"data\": [\n      [\n        490, 482, 22,\n        1, 3,\n        5, 4, 3,\n        1, 3,\n        22000, 1833.33, 0,\n        1, 19500, 84,\n        21.9, 558.30, 0.00,\n        17000, 8,\n        18000, 9500,\n        1.08, 1.79, 1,\n        0.31, 0.72, 0.31,\n        78.6, 4,\n        2, 2,\n        120, 2,\n        0.78, 2.3,\n        0, 0,\n        1, 7.2,\n        128.0, 7.8,\n        2023, 12\n      ]\n    ]\n  }\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{base_url}}/score",
+          "host": ["{{base_url}}"],
+          "path": ["score"]
+        },
+        "description": "Deep subprime borrower. FICO 490, bankruptcy history, 84-month term, zero down payment, severely underwater, 4 prior delinquencies, unemployed, insurance lapse. Expected: DELINQUENT (very high risk)."
+      }
+    },
+    {
+      "name": "7. Score - Edge Case (Retired High Income)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{api_key}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"input_data\": {\n    \"columns\": [\n      \"fico_score\", \"vantage_score\", \"payment_history_score\",\n      \"credit_history_length_years\", \"num_open_tradelines\",\n      \"num_hard_inquiries_6mo\", \"num_derog_marks\", \"num_collections\",\n      \"bankruptcy_history\", \"prev_auto_loan_delinquency_count\",\n      \"annual_income\", \"monthly_income\", \"employment_length_years\",\n      \"num_income_sources\", \"loan_amount\", \"loan_term_months\",\n      \"interest_rate_pct\", \"monthly_payment\", \"down_payment_pct\",\n      \"current_balance\", \"vehicle_age_at_origination\",\n      \"vehicle_value_at_origination\", \"current_vehicle_value\",\n      \"ltv_ratio_origination\", \"current_ltv_ratio\", \"is_underwater\",\n      \"dti_ratio\", \"total_dti_ratio\", \"payment_to_income_ratio\",\n      \"loan_burden_score\", \"times_30_dpd_last_12mo\",\n      \"times_60_dpd_last_12mo\", \"times_90_dpd_ever\",\n      \"max_days_past_due_ever\", \"consecutive_on_time_payments\",\n      \"payment_ratio_actual_vs_required\", \"dealer_markup_rate\",\n      \"has_gap_insurance\", \"has_payment_protection\",\n      \"insurance_lapse_indicator\", \"state_unemployment_rate\",\n      \"regional_used_car_price_index\", \"origination_rate_environment\",\n      \"origination_year\", \"loan_age_months\"\n    ],\n    \"data\": [\n      [\n        762, 755, 92,\n        30, 10,\n        0, 0, 0,\n        0, 0,\n        95000, 7916.67, 0,\n        3, 38000, 36,\n        4.5, 1131.45, 0.25,\n        22000, 0,\n        52000, 46000,\n        0.73, 0.48, 0,\n        0.05, 0.18, 0.14,\n        15.2, 0,\n        0, 0,\n        0, 30,\n        1.08, 0.0,\n        1, 1,\n        0, 3.0,\n        92.0, 4.0,\n        2023, 12\n      ]\n    ]\n  }\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{base_url}}/score",
+          "host": ["{{base_url}}"],
+          "path": ["score"]
+        },
+        "description": "Edge case: Retired borrower, FICO 762, high fixed income ($95k), 30 years credit history, 25% down, 3 income sources. Employment length = 0 but low risk overall. Expected: NOT delinquent."
+      }
+    },
+    {
+      "name": "8. Score - Batch (5 Customers at Once)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{api_key}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"input_data\": {\n    \"columns\": [\n      \"fico_score\", \"vantage_score\", \"payment_history_score\",\n      \"credit_history_length_years\", \"num_open_tradelines\",\n      \"num_hard_inquiries_6mo\", \"num_derog_marks\", \"num_collections\",\n      \"bankruptcy_history\", \"prev_auto_loan_delinquency_count\",\n      \"annual_income\", \"monthly_income\", \"employment_length_years\",\n      \"num_income_sources\", \"loan_amount\", \"loan_term_months\",\n      \"interest_rate_pct\", \"monthly_payment\", \"down_payment_pct\",\n      \"current_balance\", \"vehicle_age_at_origination\",\n      \"vehicle_value_at_origination\", \"current_vehicle_value\",\n      \"ltv_ratio_origination\", \"current_ltv_ratio\", \"is_underwater\",\n      \"dti_ratio\", \"total_dti_ratio\", \"payment_to_income_ratio\",\n      \"loan_burden_score\", \"times_30_dpd_last_12mo\",\n      \"times_60_dpd_last_12mo\", \"times_90_dpd_ever\",\n      \"max_days_past_due_ever\", \"consecutive_on_time_payments\",\n      \"payment_ratio_actual_vs_required\", \"dealer_markup_rate\",\n      \"has_gap_insurance\", \"has_payment_protection\",\n      \"insurance_lapse_indicator\", \"state_unemployment_rate\",\n      \"regional_used_car_price_index\", \"origination_rate_environment\",\n      \"origination_year\", \"loan_age_months\"\n    ],\n    \"data\": [\n      [810, 805, 98, 18, 12, 0, 0, 0, 0, 0, 145000, 12083.33, 15, 2, 42000, 48, 3.9, 945.12, 0.20, 28000, 0, 55000, 47000, 0.76, 0.60, 0, 0.08, 0.22, 0.08, 18.5, 0, 0, 0, 0, 36, 1.05, 0.5, 1, 1, 0, 3.2, 95.0, 3.5, 2022, 36],\n      [705, 698, 84, 10, 8, 1, 0, 0, 0, 0, 82000, 6833.33, 7, 1, 32000, 60, 6.5, 623.40, 0.10, 21000, 1, 38000, 30000, 0.84, 0.70, 0, 0.09, 0.30, 0.09, 28.4, 0, 0, 0, 0, 24, 1.02, 0.8, 1, 0, 0, 3.8, 100.0, 5.5, 2023, 18],\n      [638, 630, 68, 5, 5, 2, 1, 0, 0, 1, 52000, 4333.33, 3, 1, 27000, 72, 9.5, 499.20, 0.05, 20000, 2, 30000, 22000, 0.90, 0.91, 0, 0.12, 0.40, 0.12, 42.1, 1, 0, 0, 30, 12, 0.98, 1.1, 0, 0, 0, 4.5, 105.0, 6.0, 2022, 24],\n      [585, 578, 48, 3, 4, 3, 2, 1, 0, 2, 34000, 2833.33, 1, 1, 26000, 72, 14.5, 618.50, 0.03, 21000, 4, 28000, 18500, 0.93, 1.14, 1, 0.22, 0.55, 0.22, 58.3, 2, 1, 0, 30, 8, 0.94, 1.8, 0, 0, 1, 5.5, 115.0, 7.2, 2023, 18],\n      [490, 482, 22, 1, 3, 5, 4, 3, 1, 3, 22000, 1833.33, 0, 1, 19500, 84, 21.9, 558.30, 0.00, 17000, 8, 18000, 9500, 1.08, 1.79, 1, 0.31, 0.72, 0.31, 78.6, 4, 2, 2, 120, 2, 0.78, 2.3, 0, 0, 1, 7.2, 128.0, 7.8, 2023, 12]\n    ]\n  }\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{base_url}}/score",
+          "host": ["{{base_url}}"],
+          "path": ["score"]
+        },
+        "description": "Batch scoring: all 5 risk profiles in a single API call. Expected results: [0, 0, 0, 1, 1] — first 3 not delinquent, last 2 delinquent."
+      }
+    },
+    {
+      "name": "9. Score - Missing Fields (Error Handling Test)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{api_key}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"input_data\": {\n    \"columns\": [\"fico_score\", \"loan_amount\"],\n    \"data\": [[720, 25000]]\n  }\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{base_url}}/score",
+          "host": ["{{base_url}}"],
+          "path": ["score"]
+        },
+        "description": "Intentionally incomplete payload — only 2 columns sent. Expected: 400 Bad Request. Use this to verify your endpoint handles malformed input gracefully."
+      }
+    },
+    {
+      "name": "10. Score - Wrong API Key (Auth Test)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer INVALID_KEY_TEST_12345" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"input_data\": {\n    \"columns\": [\"fico_score\"],\n    \"data\": [[720]]\n  }\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{base_url}}/score",
+          "host": ["{{base_url}}"],
+          "path": ["score"]
+        },
+        "description": "Deliberately wrong API key. Expected: 401 Unauthorized. Use this to confirm authentication is enforced on your endpoint."
+      }
+    }
+  ]
+}
