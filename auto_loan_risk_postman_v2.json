@@ -1,0 +1,225 @@
+{
+  "info": {
+    "name": "Auto Loan Delinquency Risk API v2",
+    "_postman_id": "auto-loan-risk-api-v2",
+    "description": "Postman collection matching exact Azure ML Studio test input schema. 18 columns: loan_id, fico_score, income, loan_amount, vehicle_value, ltv_ratio, loan_term, interest_rate, monthly_payment, dti_ratio, employment_length, employment_type, credit_history_length, num_open_accounts, num_delinquencies_past, vehicle_age, vehicle_type, state.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://YOUR-ENDPOINT-NAME.YOUR-REGION.inference.ml.azure.com",
+      "description": "Replace with your Azure ML endpoint URL from Endpoints > Consume tab"
+    },
+    {
+      "key": "api_key",
+      "value": "YOUR_PRIMARY_KEY_HERE",
+      "description": "Replace with your Primary Key from Azure ML Endpoints > Consume tab"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Health Check - Endpoint Ping",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{api_key}}" }
+        ],
+        "url": {
+          "raw": "{{base_url}}",
+          "host": ["{{base_url}}"]
+        },
+        "description": "Quick ping to verify endpoint is live and API key is valid. Expected: 200 OK."
+      }
+    },
+    {
+      "name": "2. Score - Super Prime (Low Risk)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{api_key}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"input_data\": {\n    \"columns\": [\n      \"loan_id\",\n      \"fico_score\",\n      \"income\",\n      \"loan_amount\",\n      \"vehicle_value\",\n      \"ltv_ratio\",\n      \"loan_term\",\n      \"interest_rate\",\n      \"monthly_payment\",\n      \"dti_ratio\",\n      \"employment_length\",\n      \"employment_type\",\n      \"credit_history_length\",\n      \"num_open_accounts\",\n      \"num_delinquencies_past\",\n      \"vehicle_age\",\n      \"vehicle_type\",\n      \"state\"\n    ],\n    \"index\": [],\n    \"data\": [\n      [\n        \"AL000001\",\n        812,\n        145000,\n        42000,\n        58000,\n        0.72,\n        48,\n        3.9,\n        945.12,\n        0.08,\n        15,\n        \"Full-time\",\n        18,\n        12,\n        0,\n        0,\n        \"SUV\",\n        \"CA\"\n      ]\n    ]\n  },\n  \"params\": {}\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{base_url}}/score",
+          "host": ["{{base_url}}"],
+          "path": ["score"]
+        },
+        "description": "Super Prime borrower. FICO 812, $145k income, 48-month term, 0.72 LTV, zero delinquencies, new SUV. Expected: NOT delinquent (0)."
+      }
+    },
+    {
+      "name": "3. Score - Prime Customer (Medium-Low Risk)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{api_key}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"input_data\": {\n    \"columns\": [\n      \"loan_id\",\n      \"fico_score\",\n      \"income\",\n      \"loan_amount\",\n      \"vehicle_value\",\n      \"ltv_ratio\",\n      \"loan_term\",\n      \"interest_rate\",\n      \"monthly_payment\",\n      \"dti_ratio\",\n      \"employment_length\",\n      \"employment_type\",\n      \"credit_history_length\",\n      \"num_open_accounts\",\n      \"num_delinquencies_past\",\n      \"vehicle_age\",\n      \"vehicle_type\",\n      \"state\"\n    ],\n    \"index\": [],\n    \"data\": [\n      [\n        \"AL000002\",\n        708,\n        82000,\n        32000,\n        40000,\n        0.80,\n        60,\n        6.5,\n        623.40,\n        0.09,\n        7,\n        \"Full-time\",\n        10,\n        8,\n        0,\n        1,\n        \"Sedan\",\n        \"TX\"\n      ]\n    ]\n  },\n  \"params\": {}\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{base_url}}/score",
+          "host": ["{{base_url}}"],
+          "path": ["score"]
+        },
+        "description": "Prime borrower. FICO 708, $82k income, 60-month term, clean payment history. Expected: NOT delinquent (0)."
+      }
+    },
+    {
+      "name": "4. Score - Near Prime (Borderline / Medium Risk)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{api_key}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"input_data\": {\n    \"columns\": [\n      \"loan_id\",\n      \"fico_score\",\n      \"income\",\n      \"loan_amount\",\n      \"vehicle_value\",\n      \"ltv_ratio\",\n      \"loan_term\",\n      \"interest_rate\",\n      \"monthly_payment\",\n      \"dti_ratio\",\n      \"employment_length\",\n      \"employment_type\",\n      \"credit_history_length\",\n      \"num_open_accounts\",\n      \"num_delinquencies_past\",\n      \"vehicle_age\",\n      \"vehicle_type\",\n      \"state\"\n    ],\n    \"index\": [],\n    \"data\": [\n      [\n        \"AL000003\",\n        641,\n        52000,\n        27000,\n        31000,\n        0.87,\n        72,\n        9.5,\n        499.20,\n        0.12,\n        3,\n        \"Part-time\",\n        5,\n        5,\n        1,\n        2,\n        \"Sedan\",\n        \"FL\"\n      ]\n    ]\n  },\n  \"params\": {}\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{base_url}}/score",
+          "host": ["{{base_url}}"],
+          "path": ["score"]
+        },
+        "description": "Near Prime borrower. FICO 641, part-time job, 72-month term, 1 past delinquency, borderline DTI. Expected: borderline / medium risk."
+      }
+    },
+    {
+      "name": "5. Score - Subprime (High Risk)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{api_key}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"input_data\": {\n    \"columns\": [\n      \"loan_id\",\n      \"fico_score\",\n      \"income\",\n      \"loan_amount\",\n      \"vehicle_value\",\n      \"ltv_ratio\",\n      \"loan_term\",\n      \"interest_rate\",\n      \"monthly_payment\",\n      \"dti_ratio\",\n      \"employment_length\",\n      \"employment_type\",\n      \"credit_history_length\",\n      \"num_open_accounts\",\n      \"num_delinquencies_past\",\n      \"vehicle_age\",\n      \"vehicle_type\",\n      \"state\"\n    ],\n    \"index\": [],\n    \"data\": [\n      [\n        \"AL000004\",\n        587,\n        34000,\n        26000,\n        28000,\n        0.93,\n        72,\n        14.5,\n        618.50,\n        0.22,\n        1,\n        \"Part-time\",\n        3,\n        4,\n        2,\n        4,\n        \"Truck\",\n        \"GA\"\n      ]\n    ]\n  },\n  \"params\": {}\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{base_url}}/score",
+          "host": ["{{base_url}}"],
+          "path": ["score"]
+        },
+        "description": "Subprime borrower. FICO 587, $34k income, 72-month term, 2 past delinquencies, high DTI 0.22, old truck. Expected: DELINQUENT (1)."
+      }
+    },
+    {
+      "name": "6. Score - Deep Subprime (Very High Risk)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{api_key}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"input_data\": {\n    \"columns\": [\n      \"loan_id\",\n      \"fico_score\",\n      \"income\",\n      \"loan_amount\",\n      \"vehicle_value\",\n      \"ltv_ratio\",\n      \"loan_term\",\n      \"interest_rate\",\n      \"monthly_payment\",\n      \"dti_ratio\",\n      \"employment_length\",\n      \"employment_type\",\n      \"credit_history_length\",\n      \"num_open_accounts\",\n      \"num_delinquencies_past\",\n      \"vehicle_age\",\n      \"vehicle_type\",\n      \"state\"\n    ],\n    \"index\": [],\n    \"data\": [\n      [\n        \"AL000005\",\n        488,\n        22000,\n        19500,\n        18000,\n        1.08,\n        84,\n        21.9,\n        558.30,\n        0.31,\n        0,\n        \"Self-employed\",\n        1,\n        3,\n        4,\n        9,\n        \"Van\",\n        \"MI\"\n      ]\n    ]\n  },\n  \"params\": {}\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{base_url}}/score",
+          "host": ["{{base_url}}"],
+          "path": ["score"]
+        },
+        "description": "Deep Subprime borrower. FICO 488, $22k income, 84-month term (longest), LTV > 1 (underwater), 4 past delinquencies, very high DTI, 9-year-old van. Expected: DELINQUENT (1)."
+      }
+    },
+    {
+      "name": "7. Score - Edge Case (Young Borrower, New EV)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{api_key}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"input_data\": {\n    \"columns\": [\n      \"loan_id\",\n      \"fico_score\",\n      \"income\",\n      \"loan_amount\",\n      \"vehicle_value\",\n      \"ltv_ratio\",\n      \"loan_term\",\n      \"interest_rate\",\n      \"monthly_payment\",\n      \"dti_ratio\",\n      \"employment_length\",\n      \"employment_type\",\n      \"credit_history_length\",\n      \"num_open_accounts\",\n      \"num_delinquencies_past\",\n      \"vehicle_age\",\n      \"vehicle_type\",\n      \"state\"\n    ],\n    \"index\": [],\n    \"data\": [\n      [\n        \"AL000006\",\n        680,\n        61000,\n        45000,\n        52000,\n        0.87,\n        60,\n        7.2,\n        891.50,\n        0.18,\n        1,\n        \"Full-time\",\n        2,\n        3,\n        0,\n        0,\n        \"Sedan\",\n        \"WA\"\n      ]\n    ]\n  },\n  \"params\": {}\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{base_url}}/score",
+          "host": ["{{base_url}}"],
+          "path": ["score"]
+        },
+        "description": "Edge case: Young borrower, short credit history (2 yrs), new job (1 yr), first car loan. FICO 680 is decent. Expected: medium risk — model should flag short history."
+      }
+    },
+    {
+      "name": "8. Score - Batch (5 Customers at Once)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{api_key}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"input_data\": {\n    \"columns\": [\n      \"loan_id\",\n      \"fico_score\",\n      \"income\",\n      \"loan_amount\",\n      \"vehicle_value\",\n      \"ltv_ratio\",\n      \"loan_term\",\n      \"interest_rate\",\n      \"monthly_payment\",\n      \"dti_ratio\",\n      \"employment_length\",\n      \"employment_type\",\n      \"credit_history_length\",\n      \"num_open_accounts\",\n      \"num_delinquencies_past\",\n      \"vehicle_age\",\n      \"vehicle_type\",\n      \"state\"\n    ],\n    \"index\": [],\n    \"data\": [\n      [\"AL000001\", 812, 145000, 42000, 58000, 0.72, 48, 3.9,  945.12, 0.08, 15, \"Full-time\",    18, 12, 0, 0, \"SUV\",    \"CA\"],\n      [\"AL000002\", 708,  82000, 32000, 40000, 0.80, 60, 6.5,  623.40, 0.09,  7, \"Full-time\",    10,  8, 0, 1, \"Sedan\",  \"TX\"],\n      [\"AL000003\", 641,  52000, 27000, 31000, 0.87, 72, 9.5,  499.20, 0.12,  3, \"Part-time\",     5,  5, 1, 2, \"Sedan\",  \"FL\"],\n      [\"AL000004\", 587,  34000, 26000, 28000, 0.93, 72, 14.5, 618.50, 0.22,  1, \"Part-time\",     3,  4, 2, 4, \"Truck\",  \"GA\"],\n      [\"AL000005\", 488,  22000, 19500, 18000, 1.08, 84, 21.9, 558.30, 0.31,  0, \"Self-employed\", 1,  3, 4, 9, \"Van\",    \"MI\"]\n    ]\n  },\n  \"params\": {}\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{base_url}}/score",
+          "host": ["{{base_url}}"],
+          "path": ["score"]
+        },
+        "description": "Batch scoring: 5 customers in one API call across all risk tiers. Expected: [0, 0, 0/1, 1, 1] — Super Prime and Prime safe, Near Prime borderline, Subprime and Deep Subprime delinquent."
+      }
+    },
+    {
+      "name": "9. Error Test - Missing Columns (400 Bad Request)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{api_key}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"input_data\": {\n    \"columns\": [\"fico_score\", \"income\"],\n    \"index\": [],\n    \"data\": [[720, 55000]]\n  },\n  \"params\": {}\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{base_url}}/score",
+          "host": ["{{base_url}}"],
+          "path": ["score"]
+        },
+        "description": "Intentionally incomplete — only 2 of 18 columns sent. Expected: 400 Bad Request. Verifies endpoint rejects malformed input."
+      }
+    },
+    {
+      "name": "10. Error Test - Wrong API Key (401 Unauthorized)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer INVALID_KEY_TEST_000" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"input_data\": {\n    \"columns\": [\n      \"loan_id\", \"fico_score\", \"income\", \"loan_amount\", \"vehicle_value\",\n      \"ltv_ratio\", \"loan_term\", \"interest_rate\", \"monthly_payment\", \"dti_ratio\",\n      \"employment_length\", \"employment_type\", \"credit_history_length\",\n      \"num_open_accounts\", \"num_delinquencies_past\", \"vehicle_age\",\n      \"vehicle_type\", \"state\"\n    ],\n    \"index\": [],\n    \"data\": [[\"AL000001\", 720, 55000, 25000, 30000, 0.83, 60, 6.5, 487.50, 0.11, 4, \"Full-time\", 7, 5, 0, 2, \"Sedan\", \"NY\"]]\n  },\n  \"params\": {}\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{base_url}}/score",
+          "host": ["{{base_url}}"],
+          "path": ["score"]
+        },
+        "description": "Deliberately wrong API key. Expected: 401 Unauthorized. Confirms authentication is enforced on your endpoint."
+      }
+    }
+  ]
+}
